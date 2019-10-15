@@ -1,31 +1,103 @@
 language: c
-
 compiler:
     - gcc
+
+matrix:
+    include:
+    - os: linux
+      dist: precise # GCC 4.6.3
+      sudo: required
+      env:
+      - COMPILER_CC=gcc
+      - COMPILER_CXX=g++
+
+    - os: linux
+      dist: trusty # GCC 4.8.2
+      sudo: required
+      env:
+      - COMPILER_CC=gcc
+      - COMPILER_CXX=g++
+
+    - os: linux
+      dist: xenial # GCC 5.4.0
+      sudo: required
+      env:
+      - COMPILER_CC=gcc
+      - COMPILER_CXX=g++
+
+    - os: linux
+      dist: bionic # GCC 7.4.0
+      sudo: required
+      env:
+      - COMPILER_CC=gcc
+      - COMPILER_CXX=g++
+
+    - os: linux
+      dist: trusty # GCC 4.8.2
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+      - COMPILER_CC=gcc-5
+      - COMPILER_CXX=g++-5
+
+    - os: linux
+      dist: trusty # GCC 4.8.2
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+      - COMPILER_CC=gcc-6
+      - COMPILER_CXX=g++-6
+
+    - os: linux
+      dist: trusty # GCC 4.8.2
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+      - COMPILER_CC=gcc-7
+      - COMPILER_CXX=g++-7
+
+    - os: linux
+      dist: trusty # GCC 4.8.2
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+      - COMPILER_CC=gcc-8
+      - COMPILER_CXX=g++-8
+
+before_script:
+    - sudo apt-get install -y linux-headers-`uname -r`
 
 install:
     # none
 
 script:
     - uname -a
-    - which g++
-    - g++ --version
+    - export CC=${COMPILER_CC}
+    - export CXX=${COMPILER_CXX}
+    - export FC=${COMPILER_FC}
+    - ${CC} --version
+    - ${CC} --version
     - make VERBOSE=1
-
-matrix:
-    include:
-    - os: linux
-      dist: trusty
-      sudo: required
-    - os: linux
-      dist: xenial
-
-before_script:
-    - sudo apt-get install -y linux-headers-`uname -r`
 
 notifications:
     email:
         recipients:
-            - labasan1@llnl.gov
+            - brink2@llnl.gov
         on_success: always
         on_failure: always
